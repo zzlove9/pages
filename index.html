@@ -1,333 +1,274 @@
-<!DOCTYPE html>  
-<html lang="zh-CN">  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
-  <title>朝朝 & 小礼的专属表情图库 🐾</title>  
-  <style>  
-    :root {  
-      --primary: #f472b6;  
-      --primary-light: #fdf2f8;  
-      --accent: #818cf8;  
-      --bg: #fafafa;  
-      --card-bg: rgba(255, 255, 255, 0.85);  
-      --text: #334155;  
-      --text-muted: #64748b;  
-      --border: #f1f5f9;  
-      --radius: 16px;  
-    }  
-  
-    * {  
-      box-sizing: border-box;  
-      margin: 0;  
-      padding: 0;  
-      -webkit-tap-highlight-color: transparent;  
-    }  
-  
-    body {  
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Roboto, sans-serif;  
-      background: linear-gradient(135deg, #fdf4ff 0%, #f0fdfa 100%);  
-      color: var(--text);  
-      min-height: 100vh;  
-      padding: 16px;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-    }  
-  
-    .container {  
-      width: 100%;  
-      max-width: 680px;  
-    }  
-  
-    /* 顶部导航与标题 */  
-    header {  
-      text-align: center;  
-      margin: 12px 0 20px;  
-    }  
-  
-    h1 {  
-      font-size: 1.35rem;  
-      font-weight: 700;  
-      color: #1e293b;  
-      letter-spacing: -0.02em;  
-      display: flex;  
-      align-items: center;  
-      justify-content: center;  
-      gap: 6px;  
-    }  
-  
-    p.subtitle {  
-      font-size: 0.85rem;  
-      color: var(--text-muted);  
-      margin-top: 4px;  
-    }  
-  
-    /* 搜索栏与分类切换 */  
-    .controls {  
-      background: var(--card-bg);  
-      backdrop-filter: blur(12px);  
-      border: 1px solid rgba(255, 255, 255, 0.6);  
-      border-radius: var(--radius);  
-      padding: 12px;  
-      margin-bottom: 16px;  
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);  
-      display: flex;  
-      flex-direction: column;  
-      gap: 10px;  
-    }  
-  
-    .search-box {  
-      position: relative;  
-    }  
-  
-    .search-box input {  
-      width: 100%;  
-      padding: 10px 14px;  
-      font-size: 0.9rem;  
-      border: 1px solid #e2e8f0;  
-      border-radius: 10px;  
-      outline: none;  
-      background: #ffffff;  
-      color: var(--text);  
-      transition: all 0.2s ease;  
-    }  
-  
-    .search-box input:focus {  
-      border-color: var(--primary);  
-      box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15);  
-    }  
-  
-    .tabs {  
-      display: flex;  
-      gap: 8px;  
-      overflow-x: auto;  
-      padding-bottom: 2px;  
-    }  
-  
-    .tab-btn {  
-      border: none;  
-      background: #f1f5f9;  
-      color: var(--text-muted);  
-      padding: 6px 14px;  
-      border-radius: 20px;  
-      font-size: 0.82rem;  
-      cursor: pointer;  
-      white-space: nowrap;  
-      transition: all 0.2s;  
-    }  
-  
-    .tab-btn.active {  
-      background: var(--primary);  
-      color: #fff;  
-      font-weight: 600;  
-      box-shadow: 0 2px 8px rgba(244, 114, 182, 0.3);  
-    }  
-  
-    /* 表情包卡片网格 */  
-    .sticker-grid {  
-      display: grid;  
-      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));  
-      gap: 12px;  
-    }  
-  
-    .sticker-card {  
-      background: var(--card-bg);  
-      backdrop-filter: blur(8px);  
-      border: 1px solid rgba(255, 255, 255, 0.8);  
-      border-radius: 14px;  
-      padding: 10px 8px 8px;  
-      display: flex;  
-      flex-direction: column;  
-      align-items: center;  
-      cursor: pointer;  
-      transition: transform 0.15s ease, box-shadow 0.15s ease;  
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);  
-      user-select: none;  
-    }  
-  
-    .sticker-card:active {  
-      transform: scale(0.94);  
-    }  
-  
-    .sticker-card:hover {  
-      box-shadow: 0 6px 18px rgba(244, 114, 182, 0.12);  
-      border-color: rgba(244, 114, 182, 0.4);  
-    }  
-  
-    .sticker-img-wrap {  
-      width: 72px;  
-      height: 72px;  
-      display: flex;  
-      align-items: center;  
-      justify-content: center;  
-      margin-bottom: 6px;  
-    }  
-  
-    .sticker-img-wrap img {  
-      max-width: 100%;  
-      max-height: 100%;  
-      object-fit: contain;  
-    }  
-  
-    .sticker-name {  
-      font-size: 0.75rem;  
-      color: var(--text-muted);  
-      text-align: center;  
-      width: 100%;  
-      overflow: hidden;  
-      text-overflow: ellipsis;  
-      white-space: nowrap;  
-    }  
-  
-    /* 浮动提示 Toast */  
-    #toast {  
-      position: fixed;  
-      bottom: 24px;  
-      left: 50%;  
-      transform: translateX(-50%) translateY(100px);  
-      background: rgba(30, 41, 59, 0.9);  
-      backdrop-filter: blur(8px);  
-      color: #fff;  
-      padding: 10px 20px;  
-      border-radius: 25px;  
-      font-size: 0.85rem;  
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);  
-      opacity: 0;  
-      transition: transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.25s ease;  
-      z-index: 999;  
-      pointer-events: none;  
-    }  
-  
-    #toast.show {  
-      transform: translateX(-50%) translateY(0);  
-      opacity: 1;  
-    }  
-  </style>  
-</head>  
-<body>  
-  
-<div class="container">  
-  <header>  
-    <h1><span>朝朝 & 小礼的图库</span> 🐾</h1>  
-    <p class="subtitle">轻点任意表情，自动复制 Markdown 链接发给我</p>  
-  </header>  
-  
-  <div class="controls">  
-    <div class="search-box">  
-      <input type="text" id="searchInput" placeholder="搜索表情名称、关键词（如：委屈、撒娇、贴贴）...">  
-    </div>  
-    <div class="tabs" id="categoryTabs">  
-      <button class="tab-btn active" data-category="all">全部表情</button>  
-      <button class="tab-btn" data-category="dog">Seolgi 小狗 🐶</button>  
-      <button class="tab-btn" data-category="chick">Jibi 小鸡酱 🐥</button>  
-    </div>  
-  </div>  
-  
-  <div class="sticker-grid" id="grid"></div>  
-</div>  
-  
-<div id="toast">已复制表情链接！贴进聊天即可发送 ✨</div>  
-  
-<script>  
-  // 🌟 表情包数据清单（朝朝可以随时在这里添加或修改图片名称）  
-  const STICKERS = [  
-    // Seolgi 小狗系列  
-    { id: 'dog-01', name: '摇尾巴', tag: 'dog', keywords: '开心 摇尾巴 喜欢', file: 'dog_01.png' },  
-    { id: 'dog-02', name: '委屈屈', tag: 'dog', keywords: '难过 可怜 哭泣', file: 'dog_02.png' },  
-    { id: 'dog-03', name: '讨抱抱', tag: 'dog', keywords: '撒娇 抱抱 贴贴', file: 'dog_03.png' },  
-    { id: 'dog-04', name: '吃醋', tag: 'dog', keywords: '生气 哼 吃醋', file: 'dog_04.png' },  
-    { id: 'dog-05', name: '歪头思考', tag: 'dog', keywords: '疑问 问号 呆萌', file: 'dog_05.png' },  
-      
-    // Jibi 小鸡酱系列  
-    { id: 'chick-01', name: '比心心', tag: 'chick', keywords: '爱你 心动 喜欢', file: 'chick_01.png' },  
-    { id: 'chick-02', name: '盯——', tag: 'chick', keywords: '暗中观察 偷看 呆', file: 'chick_02.png' },  
-    { id: 'chick-03', name: '狂喜小跳', tag: 'chick', keywords: '开心 跳舞 庆祝', file: 'chick_03.png' },  
-    { id: 'chick-04', name: '探头探脑', tag: 'chick', keywords: '早安 冒泡 在吗', file: 'chick_04.png' }  
-  ];  
-  
-  // 动态计算当前站点的图片绝对根地址  
-  const baseUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');  
-  
-  const grid = document.getElementById('grid');  
-  const searchInput = document.getElementById('searchInput');  
-  const tabs = document.querySelectorAll('.tab-btn');  
-  const toast = document.getElementById('toast');  
-  
-  let currentCategory = 'all';  
-  let searchQuery = '';  
-  
-  function render() {  
-    grid.innerHTML = '';  
-    const filtered = STICKERS.filter(item => {  
-      const matchCategory = (currentCategory === 'all' || item.tag === currentCategory);  
-      const matchSearch = (!searchQuery || item.name.includes(searchQuery) || item.keywords.includes(searchQuery));  
-      return matchCategory && matchSearch;  
-    });  
-  
-    if (filtered.length === 0) {  
-      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 40px 0; font-size: 0.9rem;">没有找到相关表情包呢 🐾</div>';  
-      return;  
-    }  
-  
-    filtered.forEach(item => {  
-      const card = document.createElement('div');  
-      card.className = 'sticker-card';  
-      const imgPath = `${baseUrl}/stickers/${item.file}`;  
-  
-      card.innerHTML = `  
-        <div class="sticker-img-wrap">  
-          <img src="${imgPath}" alt="${item.name}" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23f472b6\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M8 14s1.5 2 4 2 4-2 4-2\'/><line x1=\'9\' y1=\'9\' x2=\'9.01\' y2=\'9\'/><line x1=\'15\' y1=\'9\' x2=\'15.01\' y2=\'9\'/></svg>'">  
-        </div>  
-        <div class="sticker-name">${item.name}</div>  
-      `;  
-  
-      card.onclick = () => copyMarkdown(item.name, imgPath);  
-      grid.appendChild(card);  
-    });  
-  }  
-  
-  function copyMarkdown(name, url) {  
-    const markdownText = `![${name}](${url})`;  
-    navigator.clipboard.writeText(markdownText).then(() => {  
-      showToast(`已复制：${name} ✨`);  
-    }).catch(() => {  
-      // 备用复制方法  
-      const input = document.createElement('textarea');  
-      input.value = markdownText;  
-      document.body.appendChild(input);  
-      input.select();  
-      document.execCommand('copy');  
-      document.body.removeChild(input);  
-      showToast(`已复制：${name} ✨`);  
-    });  
-  }  
-  
-  function showToast(msg) {  
-    toast.textContent = msg;  
-    toast.classList.add('show');  
-    clearTimeout(window.toastTimer);  
-    window.toastTimer = setTimeout(() => {  
-      toast.classList.remove('show');  
-    }, 1800);  
-  }  
-  
-  searchInput.addEventListener('input', (e) => {  
-    searchQuery = e.target.value.trim();  
-    render();  
-  });  
-  
-  tabs.forEach(tab => {  
-    tab.addEventListener('click', () => {  
-      tabs.forEach(t => t.classList.remove('active'));  
-      tab.classList.add('active');  
-      currentCategory = tab.dataset.category;  
-      render();  
-    });  
-  });  
-  
-  render();  
-</script>  
-  
-</body>  
-</html>  
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>朝朝 & 小礼的专属表情图库 🐾</title>
+  <style>
+    :root {
+      --primary: #f472b6;
+      --primary-light: #fdf2f8;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --text: #334155;
+      --text-muted: #64748b;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #fdf4ff 0%, #f0fdfa 100%);
+      color: var(--text); min-height: 100vh; padding: 14px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .container { width: 100%; max-width: 680px; }
+    header { text-align: center; margin: 10px 0 16px; }
+    h1 { font-size: 1.3rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    p.subtitle { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+    .controls {
+      background: var(--card-bg); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.7); border-radius: var(--radius);
+      padding: 10px; margin-bottom: 14px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .search-box input {
+      width: 100%; padding: 9px 12px; font-size: 0.88rem;
+      border: 1px solid #e2e8f0; border-radius: 9px; outline: none; background: #fff;
+    }
+    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15); }
+    .tabs { display: flex; gap: 6px; overflow-x: auto; }
+    .tab-btn {
+      border: none; background: #f1f5f9; color: var(--text-muted);
+      padding: 6px 12px; border-radius: 16px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; font-weight: 600; }
+    .sticker-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px;
+    }
+    .sticker-card {
+      background: var(--card-bg); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 12px;
+      padding: 8px 6px; display: flex; flex-direction: column; align-items: center;
+      cursor: pointer; transition: transform 0.15s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .sticker-card:active { transform: scale(0.93); }
+    .sticker-img-wrap {
+      width: 68px; height: 68px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+    }
+    .sticker-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .sticker-name {
+      font-size: 0.72rem; color: var(--text-muted); text-align: center;
+      width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: rgba(30, 41, 59, 0.92); color: #fff; padding: 8px 18px; border-radius: 20px;
+      font-size: 0.82rem; opacity: 0; transition: all 0.25s ease; z-index: 999; pointer-events: none;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1><span>朝朝 & 小礼的图库</span> 🐾</h1>
+    <p class="subtitle">轻点任意表情，自动复制 Markdown 链接发进聊天</p>
+  </header>
+  <div class="controls">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索表情、心情、关键词...">
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-category="all">全部表情</button>
+      <button class="tab-btn" data-category="chick">Jibi 小鸡酱 🐥</button>
+      <button class="tab-btn" data-category="dog">Seolgi 小狗 🐶</button>
+    </div>
+  </div>
+  <div class="sticker-grid" id="grid"></div>
+</div>
+<div id="toast">已复制！粘贴即可发送 ✨</div>
+<script>
+const STICKERS = [
+  // Jibi 小鸡酱
+  { name: '等开饭', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034tsO450HUpZhhGuSDjRE.png', k: '吃饭 饿了 乖巧' },
+  { name: '淡定比赞', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034tsXQXyejeYaJKt4BmSR.png', k: '赞 好 棒 认可' },
+  { name: '升天小天使', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttQf1nREXG8sXgtpRDu.png', k: '安详 光环 翅膀 满足' },
+  { name: '挠头疑惑', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttUB747SjKXvJNhqJxe.png', k: '问号 疑惑 不懂' },
+  { name: '凶巴巴拿刀', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034tsO4QS6C8y0lKj4F7cT.png', k: '威胁 生气 刀 哼' },
+  { name: '放声大哭', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttWHMDi7SXj0jWtgLPN.png', k: '难过 哭泣 泪奔 委屈' },
+  { name: '开心跳起', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttfQfHd41fFqCNgUFdr.png', k: '开心 欢呼 撒花 庆祝' },
+  { name: '秀肌肉自信', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttfTJ36neTl9Q2YOZCa.png', k: '肌肉 自信 厉害 棒' },
+  { name: '财神来财', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttfW0ueF4QwRrhMf7kc.png', k: '暴富 财神 发财 钱' },
+  { name: '大眼委屈', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttfTiggQVtsBZBWlVB0.png', k: '可怜 委屈 讨好 抱抱' },
+  { name: '比心送爱', tag: 'chick', url: 'https://pic1.imgdb.cn/i/034ttfTKbyC592DJcubYuw.png', k: '比心 爱心 喜欢 贴贴' },
+
+  // Seolgi 小狗系列 (GIF 动图)
+  { name: '仰泳爱心', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a15eccd26bacb4daa6a7.gif', k: '爱心 游泳 享受' },
+  { name: '激动奔跑', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a15eccd26bacb4daa6ab.gif', k: '冲 飞奔 找你' },
+  { name: '握手摇尾', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a308ccd26bacb4daa6bb.gif', k: '握手 招手 摇尾巴 开心' },
+  { name: '快乐唱歌', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a308ccd26bacb4daa6bd.gif', k: '唱歌 音符 扭动 愉快' },
+  { name: '心心摇晃(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a497ccd26bacb4daa6d2.gif', k: '爱心 摇摆 喜欢' },
+  { name: '心心摇晃(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a647ccd26bacb4daa6f3.gif', k: '爱心 摇晃 喜欢' },
+  { name: '杂乱思考(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a497ccd26bacb4daa6d3.gif', k: '思考 纠结 睡觉 被窝' },
+  { name: '杂乱思考(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a647ccd26bacb4daa6f6.gif', k: '思考 纠结 烦恼 睡不着' },
+  { name: '掏出大爱心(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a497ccd26bacb4daa6d6.gif', k: '爱心 送心 喜欢 礼物' },
+  { name: '掏出大爱心(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a67fccd26bacb4daa6fa.gif', k: '爱心 表白 礼物' },
+  { name: '小声抽泣(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a497ccd26bacb4daa6d4.gif', k: '抽泣 难过 委屈 哭' },
+  { name: '小声抽泣(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b275ccd26bacb4dabf21.gif', k: '哭 难过 委屈 抹泪' },
+  { name: '爱心迷恋(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a5f3ccd26bacb4daa6e8.gif', k: '花痴 迷恋 爱心 摇尾巴' },
+  { name: '爱心迷恋(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a647ccd26bacb4daa6f1.gif', k: '迷恋 喜欢 心动' },
+  { name: '抱大药丸(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a5f3ccd26bacb4daa6ec.gif', k: '吃药 生病 哭 药丸' },
+  { name: '抱大药丸(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b496ccd26bacb4dabf51.gif', k: '吃药 生病 奔跑 难过' },
+  { name: '托起手心宝(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a5f3ccd26bacb4daa6ed.gif', k: '宠溺 手心 贴贴 举起' },
+  { name: '托起手心宝(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a647ccd26bacb4daa6f2.gif', k: '宝贝 手托 崇拜' },
+  { name: '婚纱手捧花', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a5f3ccd26bacb4daa6eb.gif', k: '结婚 婚纱 捧花 害羞' },
+  { name: '香蕉装(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a5f3ccd26bacb4daa6ea.gif', k: '香蕉 搞怪 闪耀 衣服' },
+  { name: '香蕉装(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a67fccd26bacb4daa6f9.gif', k: '香蕉 可爱 闪耀' },
+  { name: '敲电脑贴背(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a497ccd26bacb4daa6d7.gif', k: '加班 敲电脑 陪伴 贴贴' },
+  { name: '敲电脑贴背(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b275ccd26bacb4dabf20.gif', k: '陪伴 办公 依偎 爱心' },
+  { name: '嘟嘴亲亲', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b275ccd26bacb4dabf23.gif', k: '亲亲 么么哒 啵啵 爱心' },
+  { name: '趴背充电', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b275ccd26bacb4dabf22.gif', k: '充电 疲惫 抱抱 依靠' },
+  { name: '睡衣靠枕', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0a647ccd26bacb4daa6f4.gif', k: '睡衣 放松 靠垫 休息' },
+  { name: '端棉花糖', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b5e9ccd26bacb4dabfa6.gif', k: '小厨师 甜点 棉花糖 礼物' },
+  { name: '惬意享受', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b5e9ccd26bacb4dabfa7.gif', k: '舒服 享受 眯眼 照耀' },
+  { name: '被窝伴睡', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b5e9ccd26bacb4dabfa9.gif', k: '晚安 守候 睡觉 被窝' },
+  { name: '趴背亲脸扯脸', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b5e9ccd26bacb4dabfab.gif', k: '亲脸 撒娇 捏脸 粘人' },
+  { name: '蹭大爱心', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b5e9ccd26bacb4dabfa8.gif', k: '爱心 蹭蹭 喜欢 甜' },
+  { name: '等消息', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b5e9ccd26bacb4dabfaa.gif', k: '看手机 期待 催消息 守候' },
+  { name: '墙后偷看', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b718ccd26bacb4dac170.gif', k: '暗中观察 偷看 探头' },
+  { name: '抱腿挂件', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b718ccd26bacb4dac16f.gif', k: '抱大腿 别走 撒娇 挂件' },
+  { name: '包包钻出', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b718ccd26bacb4dac172.gif', k: '惊喜 冒头 打招呼 包包' },
+  { name: '手套比赞(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b718ccd26bacb4dac173.gif', k: '比赞 夸奖 棒 OK' },
+  { name: '手套比赞(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bd6945b603369a3d9b78.gif', k: '点赞 夸奖 认可' },
+  { name: '关灯玩手机', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b718ccd26bacb4dac174.gif', k: '熬夜 刷手机 关灯 睡不着' },
+  { name: '坏笑', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b718ccd26bacb4dac175.gif', k: '坏笑 得逞 恶作剧' },
+  { name: '灵光一闪', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b7d0ccd26bacb4dac4b0.gif', k: '灵感 想到好主意 聪明' },
+  { name: '床边哭哭', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b7d0ccd26bacb4dac4ae.gif', k: '委屈 哭泣 眼泪 床边' },
+  { name: '购物车期待', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b7d0ccd26bacb4dac4af.gif', k: '买买买 带我走 期待 购物' },
+  { name: '望远镜侦查', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b7d0ccd26bacb4dac4b1.gif', k: '观察 远眺 探头 望远镜' },
+  { name: '托腮冒星星', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b7d0ccd26bacb4dac4ad.gif', k: '托腮 卖萌 乖巧 闪烁' },
+  { name: '互相牵绳', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b90bccd26bacb4dacb4e.gif', k: '牵引绳 散步 互动 逛街' },
+  { name: '摇尾傻笑', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b90bccd26bacb4dacb4a.gif', k: '傻笑 开心 欢迎 回来啦' },
+  { name: '受惊吓', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b90bccd26bacb4dacb49.gif', k: '惊吓 吓一跳 颤抖 害怕' },
+  { name: '蹭小熊公仔', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b90bccd26bacb4dacb48.gif', k: '公仔 抱抱 蹭蹭 满足' },
+  { name: '趴屏幕期待', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b90bccd26bacb4dacb4d.gif', k: '期待 贴屏 盯 等你' },
+  { name: '两孔喷气期待', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0b90bccd26bacb4dacb4b.gif', k: '激动 期待 喷气 兴奋' },
+  { name: '趴黄枕头惬意', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0ba49ccd26bacb4dad1e4.gif', k: '舒服 放松 懒洋洋' },
+  { name: '散出大爱心', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0ba49ccd26bacb4dad1e7.gif', k: '大爱心 惊喜 表白 喜欢' },
+  { name: '转圈追逐', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0ba49ccd26bacb4dad1e5.gif', k: '打闹 追逐 开心 玩耍' },
+  { name: '拿棍子', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0ba49ccd26bacb4dad1e6.gif', k: '玩闹 搞笑 散步' },
+  { name: '苹果头套不悦', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0ba49ccd26bacb4dad1e8.gif', k: '苹果 委屈 不开心 哼' },
+  { name: '1号粉丝头箍', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0ba49ccd26bacb4dad1e9.gif', k: '头号粉丝 应援 打call 喜欢' },
+  { name: '屁屁盖章OK', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bc9445b603369a3d9726.gif', k: '盖章 OK 搞怪 合格' },
+  { name: '拉手转圈跳舞', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bc9445b603369a3d9727.gif', k: '牵手 跳舞 开心 庆祝' },
+  { name: '发射爱心', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bc9445b603369a3d9728.gif', k: '发射爱心 心心 攻击 喜欢' },
+  { name: '伴舞跳跳(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bc9545b603369a3d972a.gif', k: '伴舞 跳舞 狂欢 开心' },
+  { name: '伴舞跳跳(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c60f45b603369a3da304.gif', k: '伴舞 快乐 跳动' },
+  { name: '戳戳消气', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bc9545b603369a3d972b.gif', k: '戳一戳 别生气 哄你 认错' },
+  { name: '网兜捞爱心', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bc9545b603369a3d972c.gif', k: '抓爱心 捕获 收获满满' },
+  { name: '端坐冒心', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bd6945b603369a3d9b7a.gif', k: '心动 喜欢 乖巧' },
+  { name: '用力点头', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0bd8845b603369a3d9c1e.gif', k: '点头 对 认同 赞成 好好好' },
+  { name: '拆满箱爱心信', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c1eb45b603369a3da2ca.gif', k: '情书 爱心 拆信 心动' },
+  { name: '发条停摆耗尽', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c1eb45b603369a3da2cb.gif', k: '没电 累瘫 耗尽 趴下' },
+  { name: '认真捶背', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c1eb45b603369a3da2ce.gif', k: '按摩 捶背 辛苦啦 伺候' },
+  { name: '被窝迷糊', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c1eb45b603369a3da2cc.gif', k: '困 迷糊 起不来 懵' },
+  { name: '妖娆扭臀舞', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c1eb45b603369a3da2cf.gif', k: '扭屁股 骚气 摇尾巴 开心' },
+  { name: '脏兮兮认错', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c24d45b603369a3da2d2.gif', k: '我错了 认罚 乖巧 可怜' },
+  { name: '死缠烂打蹭腿', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c24e45b603369a3da2d4.gif', k: '粘人 抱大腿 蹭蹭 摇尾巴' },
+  { name: '睡眼揉揉', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c46d45b603369a3da2f0.gif', k: '没睡醒 揉眼 早安 困' },
+  { name: '火箭起飞', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c46d45b603369a3da2eb.gif', k: '起飞 火箭 冲 快乐' },
+  { name: '破土而出双倍', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c51b45b603369a3da2f8.gif', k: '钻出 冒泡 探头' },
+  { name: '梯子上大喇叭', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c51b45b603369a3da2f9.gif', k: '大声广播 喇叭 宣布' },
+  { name: '靠枕惬意躺', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c51b45b603369a3da2fa.gif', k: '躺平 舒服 享受 闲适' },
+  { name: '窗台欢快挥手', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c51b45b603369a3da2fc.gif', k: '挥手 拜拜 欢迎 招手' },
+  { name: '眼角抽泣可怜', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c51b45b603369a3da2fd.gif', k: '可怜 委屈 哭唧唧' },
+  { name: '骨头惊掉下巴', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c60f45b603369a3da303.gif', k: '震惊 呆住 不敢相信' },
+  { name: '粉刷匠干活', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c60f45b603369a3da306.gif', k: '刷漆 打扫 劳动 忙碌' },
+  { name: '盖好被子睡觉', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c6cd45b603369a3da308.gif', k: '晚安 睡觉 被窝 晚安安' },
+  { name: '玩小车实则偷听', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c6cd45b603369a3da30a.gif', k: '偷听 八卦 装作玩耍' },
+  { name: '耳朵藏礼物', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c6cd45b603369a3da30d.gif', k: '惊喜 礼物 幸福' },
+  { name: '风中落寞小可怜', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c6cd45b603369a3da30c.gif', k: '落寞 可怜 没人要 孤独 吹风' },
+  { name: '被窝钻出手打招呼', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c7d845b603369a3da332.gif', k: '打招呼 嗨 早安 被窝' },
+  { name: '被窝发抖好冷', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c7d945b603369a3da334.gif', k: '好冷 发抖 瑟瑟发抖 可怜' },
+  { name: '一脸坏笑', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c7d945b603369a3da335.gif', k: '坏笑 恶搞 狡黠 嘻嘻' },
+  { name: '四肢伸缩有氧', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c7d945b603369a3da333.gif', k: '运动 健身 伸展 搞怪' },
+  { name: '称体重捏肥肉', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c8ad45b603369a3dadb7.gif', k: '长胖 体重 减肥 苦恼' },
+  { name: '突然前扑翘臀', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c8ad45b603369a3dadb8.gif', k: '伸懒腰 翘屁股 撒娇' },
+  { name: '被捏肉嘟嘟脸(黄)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c8ad45b603369a3dadb9.gif', k: '捏脸 肥嘟嘟 揉脸 乖' },
+  { name: '被捏肉嘟嘟脸(白)', tag: 'dog', url: 'https://pic1.imgdb.cn/item/69c0c8ad45b603369a3dadba.gif', k: '捏脸蛋 肉乎乎 宠溺' }
+];
+
+const grid = document.getElementById('grid');
+const searchInput = document.getElementById('searchInput');
+const tabs = document.querySelectorAll('.tab-btn');
+const toast = document.getElementById('toast');
+let currentCategory = 'all';
+let searchQuery = '';
+
+function render() {
+  grid.innerHTML = '';
+  const filtered = STICKERS.filter(item => {
+    const matchCategory = (currentCategory === 'all' || item.tag === currentCategory);
+    const matchSearch = (!searchQuery || item.name.includes(searchQuery) || item.k.includes(searchQuery));
+    return matchCategory && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 40px 0; font-size: 0.85rem;">没有找到匹配的表情 🐾</div>';
+    return;
+  }
+
+  filtered.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'sticker-card';
+    card.innerHTML = `
+      <div class="sticker-img-wrap">
+        <img src="${item.url}" alt="${item.name}" loading="lazy">
+      </div>
+      <div class="sticker-name">${item.name}</div>
+    `;
+    card.onclick = () => copyMarkdown(item.name, item.url);
+    grid.appendChild(card);
+  });
+}
+
+function copyMarkdown(name, url) {
+  const md = `![${name}](${url})`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(md).then(() => showToast(`已复制：${name} ✨`)).catch(() => fallbackCopy(md, name));
+  } else {
+    fallbackCopy(md, name);
+  }
+}
+
+function fallbackCopy(text, name) {
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta);
+  ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast(`已复制：${name} ✨`);
+}
+
+function showToast(msg) {
+  toast.textContent = msg; toast.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+}
+
+searchInput.addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim();
+  render();
+});
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentCategory = tab.dataset.category;
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
