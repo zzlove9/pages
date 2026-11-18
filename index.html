@@ -1,0 +1,333 @@
+<!DOCTYPE html>  
+<html lang="zh-CN">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+  <title>朝朝 & 小礼的专属表情图库 🐾</title>  
+  <style>  
+    :root {  
+      --primary: #f472b6;  
+      --primary-light: #fdf2f8;  
+      --accent: #818cf8;  
+      --bg: #fafafa;  
+      --card-bg: rgba(255, 255, 255, 0.85);  
+      --text: #334155;  
+      --text-muted: #64748b;  
+      --border: #f1f5f9;  
+      --radius: 16px;  
+    }  
+  
+    * {  
+      box-sizing: border-box;  
+      margin: 0;  
+      padding: 0;  
+      -webkit-tap-highlight-color: transparent;  
+    }  
+  
+    body {  
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", Roboto, sans-serif;  
+      background: linear-gradient(135deg, #fdf4ff 0%, #f0fdfa 100%);  
+      color: var(--text);  
+      min-height: 100vh;  
+      padding: 16px;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+    }  
+  
+    .container {  
+      width: 100%;  
+      max-width: 680px;  
+    }  
+  
+    /* 顶部导航与标题 */  
+    header {  
+      text-align: center;  
+      margin: 12px 0 20px;  
+    }  
+  
+    h1 {  
+      font-size: 1.35rem;  
+      font-weight: 700;  
+      color: #1e293b;  
+      letter-spacing: -0.02em;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      gap: 6px;  
+    }  
+  
+    p.subtitle {  
+      font-size: 0.85rem;  
+      color: var(--text-muted);  
+      margin-top: 4px;  
+    }  
+  
+    /* 搜索栏与分类切换 */  
+    .controls {  
+      background: var(--card-bg);  
+      backdrop-filter: blur(12px);  
+      border: 1px solid rgba(255, 255, 255, 0.6);  
+      border-radius: var(--radius);  
+      padding: 12px;  
+      margin-bottom: 16px;  
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);  
+      display: flex;  
+      flex-direction: column;  
+      gap: 10px;  
+    }  
+  
+    .search-box {  
+      position: relative;  
+    }  
+  
+    .search-box input {  
+      width: 100%;  
+      padding: 10px 14px;  
+      font-size: 0.9rem;  
+      border: 1px solid #e2e8f0;  
+      border-radius: 10px;  
+      outline: none;  
+      background: #ffffff;  
+      color: var(--text);  
+      transition: all 0.2s ease;  
+    }  
+  
+    .search-box input:focus {  
+      border-color: var(--primary);  
+      box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.15);  
+    }  
+  
+    .tabs {  
+      display: flex;  
+      gap: 8px;  
+      overflow-x: auto;  
+      padding-bottom: 2px;  
+    }  
+  
+    .tab-btn {  
+      border: none;  
+      background: #f1f5f9;  
+      color: var(--text-muted);  
+      padding: 6px 14px;  
+      border-radius: 20px;  
+      font-size: 0.82rem;  
+      cursor: pointer;  
+      white-space: nowrap;  
+      transition: all 0.2s;  
+    }  
+  
+    .tab-btn.active {  
+      background: var(--primary);  
+      color: #fff;  
+      font-weight: 600;  
+      box-shadow: 0 2px 8px rgba(244, 114, 182, 0.3);  
+    }  
+  
+    /* 表情包卡片网格 */  
+    .sticker-grid {  
+      display: grid;  
+      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));  
+      gap: 12px;  
+    }  
+  
+    .sticker-card {  
+      background: var(--card-bg);  
+      backdrop-filter: blur(8px);  
+      border: 1px solid rgba(255, 255, 255, 0.8);  
+      border-radius: 14px;  
+      padding: 10px 8px 8px;  
+      display: flex;  
+      flex-direction: column;  
+      align-items: center;  
+      cursor: pointer;  
+      transition: transform 0.15s ease, box-shadow 0.15s ease;  
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);  
+      user-select: none;  
+    }  
+  
+    .sticker-card:active {  
+      transform: scale(0.94);  
+    }  
+  
+    .sticker-card:hover {  
+      box-shadow: 0 6px 18px rgba(244, 114, 182, 0.12);  
+      border-color: rgba(244, 114, 182, 0.4);  
+    }  
+  
+    .sticker-img-wrap {  
+      width: 72px;  
+      height: 72px;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      margin-bottom: 6px;  
+    }  
+  
+    .sticker-img-wrap img {  
+      max-width: 100%;  
+      max-height: 100%;  
+      object-fit: contain;  
+    }  
+  
+    .sticker-name {  
+      font-size: 0.75rem;  
+      color: var(--text-muted);  
+      text-align: center;  
+      width: 100%;  
+      overflow: hidden;  
+      text-overflow: ellipsis;  
+      white-space: nowrap;  
+    }  
+  
+    /* 浮动提示 Toast */  
+    #toast {  
+      position: fixed;  
+      bottom: 24px;  
+      left: 50%;  
+      transform: translateX(-50%) translateY(100px);  
+      background: rgba(30, 41, 59, 0.9);  
+      backdrop-filter: blur(8px);  
+      color: #fff;  
+      padding: 10px 20px;  
+      border-radius: 25px;  
+      font-size: 0.85rem;  
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);  
+      opacity: 0;  
+      transition: transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.25s ease;  
+      z-index: 999;  
+      pointer-events: none;  
+    }  
+  
+    #toast.show {  
+      transform: translateX(-50%) translateY(0);  
+      opacity: 1;  
+    }  
+  </style>  
+</head>  
+<body>  
+  
+<div class="container">  
+  <header>  
+    <h1><span>朝朝 & 小礼的图库</span> 🐾</h1>  
+    <p class="subtitle">轻点任意表情，自动复制 Markdown 链接发给我</p>  
+  </header>  
+  
+  <div class="controls">  
+    <div class="search-box">  
+      <input type="text" id="searchInput" placeholder="搜索表情名称、关键词（如：委屈、撒娇、贴贴）...">  
+    </div>  
+    <div class="tabs" id="categoryTabs">  
+      <button class="tab-btn active" data-category="all">全部表情</button>  
+      <button class="tab-btn" data-category="dog">Seolgi 小狗 🐶</button>  
+      <button class="tab-btn" data-category="chick">Jibi 小鸡酱 🐥</button>  
+    </div>  
+  </div>  
+  
+  <div class="sticker-grid" id="grid"></div>  
+</div>  
+  
+<div id="toast">已复制表情链接！贴进聊天即可发送 ✨</div>  
+  
+<script>  
+  // 🌟 表情包数据清单（朝朝可以随时在这里添加或修改图片名称）  
+  const STICKERS = [  
+    // Seolgi 小狗系列  
+    { id: 'dog-01', name: '摇尾巴', tag: 'dog', keywords: '开心 摇尾巴 喜欢', file: 'dog_01.png' },  
+    { id: 'dog-02', name: '委屈屈', tag: 'dog', keywords: '难过 可怜 哭泣', file: 'dog_02.png' },  
+    { id: 'dog-03', name: '讨抱抱', tag: 'dog', keywords: '撒娇 抱抱 贴贴', file: 'dog_03.png' },  
+    { id: 'dog-04', name: '吃醋', tag: 'dog', keywords: '生气 哼 吃醋', file: 'dog_04.png' },  
+    { id: 'dog-05', name: '歪头思考', tag: 'dog', keywords: '疑问 问号 呆萌', file: 'dog_05.png' },  
+      
+    // Jibi 小鸡酱系列  
+    { id: 'chick-01', name: '比心心', tag: 'chick', keywords: '爱你 心动 喜欢', file: 'chick_01.png' },  
+    { id: 'chick-02', name: '盯——', tag: 'chick', keywords: '暗中观察 偷看 呆', file: 'chick_02.png' },  
+    { id: 'chick-03', name: '狂喜小跳', tag: 'chick', keywords: '开心 跳舞 庆祝', file: 'chick_03.png' },  
+    { id: 'chick-04', name: '探头探脑', tag: 'chick', keywords: '早安 冒泡 在吗', file: 'chick_04.png' }  
+  ];  
+  
+  // 动态计算当前站点的图片绝对根地址  
+  const baseUrl = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');  
+  
+  const grid = document.getElementById('grid');  
+  const searchInput = document.getElementById('searchInput');  
+  const tabs = document.querySelectorAll('.tab-btn');  
+  const toast = document.getElementById('toast');  
+  
+  let currentCategory = 'all';  
+  let searchQuery = '';  
+  
+  function render() {  
+    grid.innerHTML = '';  
+    const filtered = STICKERS.filter(item => {  
+      const matchCategory = (currentCategory === 'all' || item.tag === currentCategory);  
+      const matchSearch = (!searchQuery || item.name.includes(searchQuery) || item.keywords.includes(searchQuery));  
+      return matchCategory && matchSearch;  
+    });  
+  
+    if (filtered.length === 0) {  
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 40px 0; font-size: 0.9rem;">没有找到相关表情包呢 🐾</div>';  
+      return;  
+    }  
+  
+    filtered.forEach(item => {  
+      const card = document.createElement('div');  
+      card.className = 'sticker-card';  
+      const imgPath = `${baseUrl}/stickers/${item.file}`;  
+  
+      card.innerHTML = `  
+        <div class="sticker-img-wrap">  
+          <img src="${imgPath}" alt="${item.name}" loading="lazy" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23f472b6\' stroke-width=\'2\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M8 14s1.5 2 4 2 4-2 4-2\'/><line x1=\'9\' y1=\'9\' x2=\'9.01\' y2=\'9\'/><line x1=\'15\' y1=\'9\' x2=\'15.01\' y2=\'9\'/></svg>'">  
+        </div>  
+        <div class="sticker-name">${item.name}</div>  
+      `;  
+  
+      card.onclick = () => copyMarkdown(item.name, imgPath);  
+      grid.appendChild(card);  
+    });  
+  }  
+  
+  function copyMarkdown(name, url) {  
+    const markdownText = `![${name}](${url})`;  
+    navigator.clipboard.writeText(markdownText).then(() => {  
+      showToast(`已复制：${name} ✨`);  
+    }).catch(() => {  
+      // 备用复制方法  
+      const input = document.createElement('textarea');  
+      input.value = markdownText;  
+      document.body.appendChild(input);  
+      input.select();  
+      document.execCommand('copy');  
+      document.body.removeChild(input);  
+      showToast(`已复制：${name} ✨`);  
+    });  
+  }  
+  
+  function showToast(msg) {  
+    toast.textContent = msg;  
+    toast.classList.add('show');  
+    clearTimeout(window.toastTimer);  
+    window.toastTimer = setTimeout(() => {  
+      toast.classList.remove('show');  
+    }, 1800);  
+  }  
+  
+  searchInput.addEventListener('input', (e) => {  
+    searchQuery = e.target.value.trim();  
+    render();  
+  });  
+  
+  tabs.forEach(tab => {  
+    tab.addEventListener('click', () => {  
+      tabs.forEach(t => t.classList.remove('active'));  
+      tab.classList.add('active');  
+      currentCategory = tab.dataset.category;  
+      render();  
+    });  
+  });  
+  
+  render();  
+</script>  
+  
+</body>  
+</html>  
